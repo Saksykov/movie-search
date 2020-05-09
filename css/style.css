@@ -1,0 +1,246 @@
+*{
+    margin: 0;
+    padding: 0;
+}
+/* HEADER */
+.header {
+	position: fixed;
+	top: 0;
+	left: 0;
+	right: 0;
+	z-index: 5;
+}
+.container {
+	max-width: 1278px;
+    margin: 0 auto;
+    display: flex;
+	justify-content: center;
+	height: 89px;
+	background-color: #2d303a;
+	border-bottom: 6px solid #323746;
+	align-items: center;
+	padding: 0 23px 0 40px;
+}
+.title {
+	font-size: 32px;
+	color: #ffffff;
+	font-weight: 700;
+	letter-spacing: 0.1rem;
+	text-align: center;
+	vertical-align: middle;
+}
+.title-icon {
+    margin-left: 5px;
+    height: 30px;
+    width: 48px;
+    background-color: #fff;
+}
+
+/* SEARCH */
+.search {
+	margin-top: 95px;
+}
+.search-container {
+	max-width: 1278px;
+    margin: 0 auto;
+    display: flex;
+	justify-content: center;
+	height: 105px;
+	background-color: #c7c9cf;
+	align-items: center;
+    padding: 0 23px 0 40px;
+}
+.field {
+    width: 50%;
+    height: 38px;
+	border: none;
+	outline: none;
+	padding: 0 12px 0 15px;
+	color: #291111;
+	border-radius: 5px;
+}
+.search-container img {
+    position: relative;
+    display: inline-block;
+    margin: 0 5px;
+    width: 38px;
+    border-radius: 50%;
+    background-color: rgb(245, 240, 240);
+}
+.search-container img:hover {
+    cursor: pointer;
+}
+.search-container img:active {
+    top: .1em;
+    left: .1em;
+    box-shadow: 0 0 0 60px rgba(0,0,0,.05) inset;
+}
+.key-div.none {
+    display: none;
+}
+.btn {
+    position: relative;
+    display: inline-block;
+    width: 8em;
+    height: 2.5em;
+    line-height: 2.5em;
+    vertical-align: middle;
+    text-align: center;
+    text-decoration: none;
+    text-shadow: 0 -1px 1px #777;
+    color: #fff;
+    outline: none;
+    border: 2px solid #F64C2B;
+    border-radius: 5px;
+    box-shadow: 0 0 0 60px rgba(0,0,0,0) inset, .1em .1em .2em #800;
+    background: linear-gradient(#FB9575, #F45A38 48%, #EA1502 52%, #F02F17);
+}
+.btn:hover {
+    cursor: pointer;
+} 
+.btn:active {
+    top: .1em;
+    left: .1em;
+    box-shadow: 0 0 0 60px rgba(0,0,0,.05) inset;
+}
+
+/* KEYBOARD */
+
+.keyboard{
+    position: fixed;
+    width: 540px;
+    height: 178px;
+    margin: 0 35% 0 35%;
+    padding: 5px 0;
+    background: #555555;
+    box-shadow: 0 0 50px rgba(0, 0, 0, 0.5);
+    user-select: none;
+    transition: bottom 0.5s;
+    border-radius: 10px;
+}
+.keyboard-hidden{
+    bottom: -100%;
+}
+.keyboard_keys{
+    text-align: center;
+}
+.keyboard_key {
+    height: 30px;
+    width: 30px;
+    margin: 3px;
+    border-radius: 4px;
+    border: none;
+    background: rgba(255, 255, 255, 0.2);
+    color: #ffffff;
+    font-size: 1.05rem;
+    outline: none;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    vertical-align: top;
+    padding: 0;
+    -webkit-tap-highlight-color: transparent;
+    position: relative;
+}
+.keyboard_key:active {
+    background: rgba(255, 255, 255, 0.12);
+}
+.keyboard_key-wide {
+    width: 60px;
+}
+.keyboard_key-extra-wide {
+    width: 180px;
+}
+.keyboard_key-activatable::after {
+    content: '';
+    top: 10px;
+    right: 10px;
+    position: absolute;
+    width: 8px;
+    height: 8px;
+    background: rgba(0, 0, 0, 0.4);
+    border-radius: 50%;
+}
+.keyboard_key-active::after {
+    background: #08ff00;
+}
+.keyboard_key-dark {
+    background: rgba(0, 0, 0, 0.25);
+}
+.keyboard_key-en::after {
+    content: 'en';
+    float: right;    
+}
+.keyboard_key-ru::after {
+    content: 'ru';
+}
+
+/* SLIDER */
+
+.slider-container {
+    max-width: 1278px;
+    margin: 0 auto;
+    display: flex;
+	justify-content: space-around;
+	height: 70vh;
+	background: #c7c9cf;
+	border-bottom: 6px solid #686464;
+	align-items: center;
+    padding: 0 23px 0 40px;
+}
+.slider-container img {
+    width: 48px;
+}
+.slider-container img:hover {
+    cursor: pointer;
+}
+.slider-container img:active {
+    width: 50px;
+}
+
+/* FOOTER */
+.footer-container {
+    max-width: 1278px;
+    margin: 0 auto;
+    display: flex;
+	justify-content: space-around;
+    height: 76px;
+    color: #fff;
+	background-color: #2d303a;
+	align-items: center;
+	padding: 0 23px 0 40px;
+}
+.ghIcon {
+    margin-right: 5px;
+    width: 20px;
+    background-color:#fff;
+    border-radius: 50%;
+}
+.gh {
+    display: flex;
+}
+.gh-link {
+    text-decoration: none;
+    color: #fff;
+}
+.movie-container {
+    width: 80%;
+    display: flex;
+    justify-content: space-between;
+    font-weight: bold;
+}
+.movie {
+    width: 20%;
+    text-align: center;
+}
+.movie-title {
+    height: 70px;
+    font-size: 16px;
+}
+.movie-title h2{
+    font-size: 20px;
+}
+.movie-poster img {
+    width: 100%;
+}
