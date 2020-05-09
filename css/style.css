@@ -198,6 +198,31 @@
 .slider-container img:active {
     width: 50px;
 }
+.slider-container img.hidden {
+    opacity: 0;
+    width: 48px;
+    cursor: unset;
+}
+.movie-container {
+    width: 80%;
+    display: flex;
+    justify-content: space-between;
+    font-weight: bold;
+}
+.movie {
+    width: 20%;
+    text-align: center;
+}
+.movie-title {
+    height: 70px;
+    font-size: 16px;
+}
+.movie-title h2{
+    font-size: 20px;
+}
+.movie-poster img {
+    width: 100%;
+}
 
 /* FOOTER */
 .footer-container {
@@ -223,24 +248,4 @@
 .gh-link {
     text-decoration: none;
     color: #fff;
-}
-.movie-container {
-    width: 80%;
-    display: flex;
-    justify-content: space-between;
-    font-weight: bold;
-}
-.movie {
-    width: 20%;
-    text-align: center;
-}
-.movie-title {
-    height: 70px;
-    font-size: 16px;
-}
-.movie-title h2{
-    font-size: 20px;
-}
-.movie-poster img {
-    width: 100%;
 }

@@ -27,10 +27,10 @@ export default {
             if (main.classList.contains('keyboard-hidden')) {
                 virtualKeyboard.open(this.field.value, currentValue => {
                     this.field.value = currentValue;
-                });
-                this.field.focus();
+                });              
             }
             else virtualKeyboard.close();
+            this.field.focus();
         });
         
         this.btn.addEventListener('click', () => {

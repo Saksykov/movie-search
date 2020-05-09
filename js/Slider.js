@@ -15,7 +15,7 @@ export default {
             this.page = 1;
             this.value = Search.value;
             this.movies = [];
-        }console.log(this.value);
+        }console.log(this.value, this.page, this.count);
 
         this.getMovie(this.value, this.page)
             .then(data => {
@@ -28,7 +28,8 @@ export default {
                     this.movies.push(mov);
                 }
 
-                this.backArrow = create('img', 'back-arrow', '', null, ['src', '../assets/back.png']);
+                if (this.count == 0) this.backArrow = create('img', 'back-arrow hidden', '', null, ['src', '../assets/back.png']);
+                else this.backArrow = create('img', 'back-arrow', '', null, ['src', '../assets/back.png']);               
                 this.back = create('div', 'back', this.backArrow);
                 this.movieContainer = create('div', 'movie-container', this._createMovies(this.movies, this.count, this.inDOM));  
                 this.forwardArrow = create('img', 'forward-arrow', '', null, ['src', '../assets/forward.png']);
@@ -38,6 +39,7 @@ export default {
                 
                 document.body.appendChild(this.slider);
                 Footer.init();
+                this.sliderForward();
             });
 
         
@@ -62,5 +64,11 @@ export default {
             res.push(this.movieElement);
         }
         return res;       
-    }    
+    },
+
+    sliderForward(){
+        this.forwardArrow = document.addEventListener('click', (e) => {
+            this.count++;
+        });
+    }
 }
