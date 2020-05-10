@@ -2,73 +2,87 @@ import create from './create.js';
 import Search from './Search.js';
 import Footer from './Footer.js';
 
+
 export default {
 
     movies: [],
     value: '',
     page: 1,
-    count: 0,
-    inDOM: 4,
+    results: 0,
 
-    init() {
-        if (this.value != Search.value) {
-            this.page = 1;
-            this.value = Search.value;
-            this.movies = [];
-        }console.log(this.value, this.page, this.count);
+    init() {       
+        this.value = Search.value; 
+        this.movies = [];
 
-        this.getMovie(this.value, this.page)
-            .then(data => {
-                for (let j = 0; j < 10; j++) {
-                    let mov = [
-                        data.Search[j].Title,
-                        data.Search[j].Poster,
-                        data.Search[j].Year
-                    ];
-                    this.movies.push(mov);
-                }
+        this.getMovie(this.page)
+        .then(data => {
+            this.wrapper = create('div', 'swiper-wrapper', this.createMovieCard(data));              
+            this.prev = create('div', 'swiper-button-prev');                 
+            this.next = create('div', 'swiper-button-next');
+            this.container = create('div', 'swiper-container', this.wrapper);
+            this.swiper = create('section', 'swiper', [this.prev, this.container, this.next]);
 
-                if (this.count == 0) this.backArrow = create('img', 'back-arrow hidden', '', null, ['src', '../assets/back.png']);
-                else this.backArrow = create('img', 'back-arrow', '', null, ['src', '../assets/back.png']);               
-                this.back = create('div', 'back', this.backArrow);
-                this.movieContainer = create('div', 'movie-container', this._createMovies(this.movies, this.count, this.inDOM));  
-                this.forwardArrow = create('img', 'forward-arrow', '', null, ['src', '../assets/forward.png']);
-                this.forward = create('div', 'forward', this.forwardArrow);
-                this.container = create('div', 'slider-container', [this.back, this.movieContainer, this.forward]);
-                this.slider = create('section', 'slider', this.container);
-                
-                document.body.appendChild(this.slider);
-                Footer.init();
-                this.sliderForward();
-            });
-
+            document.body.appendChild(this.swiper);
+            Footer.init();
+            this.initSwiper();
+        })
         
     },
     
-    async getMovie(value, page) {
-        let response = await fetch(`https://www.omdbapi.com/?s=${value}&page=${page}&apikey=80661894`);
+    async getMovie(page) {
+        let response = await fetch(`https://www.omdbapi.com/?s=${this.value}&page=${page}&apikey=80661894`);
         let data = await response.json();
+        page++;
         return data;
     },
 
-    _createMovies(arr, count, n) {
-        const DEFAULT_PLACEHOLDER_IMAGE = "https://m.media-amazon.com/images/M/MV5BMTczNTI2ODUwOF5BMl5BanBnXkFtZTcwMTU0NTIzMw@@._V1_SX300.jpg";
-        let res = [];
-        for (let i = count; i < count + n; i++) {
-            this.movieTitle = create('div', 'movie-title', create('h2', '', `${arr[i][0]}`));
-            let poster = arr[i].Poster === "N/A" ? DEFAULT_PLACEHOLDER_IMAGE : arr[i][1];
-            this.moviePoster = create('div', 'movie-poster', create('img', '', '', null, ['src', poster], ['alt', `The movie titled: ${arr[i][0]}`]));
-            this.movieYear = create('p', 'movie-year', `${arr[i][2]}`);
-            this.movieElement = create('div', `movie element${i}`, [this.movieTitle, this.moviePoster, this.movieYear]);
-            
-            res.push(this.movieElement);
+    createMovieCard(data) {    
+        this.results = parseInt(data.totalResults);
+        
+        let count = 10;
+        if (this.results < 50) count = this.results;
+                
+        while (count > 0) {
+            let n = 10;                                                                           
+            if (count < 10) n = count;
+            for (let i = 0; i < n; i++) {
+                this.movieTitle = create('div', 'movie-title', create('h2', '', `${data.Search[i].Title}`));
+                this.moviePoster = create('div', 'movie-poster', create('img', '', '', null, ['src', `${data.Search[i].Poster}`], ['alt', `The movie titled: ${data.Search[i].Title}`]));
+                this.movieYear = create('p', 'movie-year', `${data.Search[i].Year}`);
+                this.movieElement = create('div', `swiper-slide`, [this.movieTitle, this.moviePoster, this.movieYear]);
+                
+                this.movies.push(this.movieElement);
+            }
+                
+            count -= n;            
         }
-        return res;       
+        return this.movies;                     
     },
 
-    sliderForward(){
-        this.forwardArrow = document.addEventListener('click', (e) => {
-            this.count++;
+    initSwiper() {
+        const mySwiper =  new Swiper('.swiper-container', {
+            slidesPerView: 4,
+            spaceBetween: 60,
+            direction: 'horizontal',
+            navigation: {
+              nextEl: '.swiper-button-next',
+              prevEl: '.swiper-button-prev',
+            },
+            breakpoints: {
+              319: {
+                slidesPerView: 1,
+              },
+              640: {
+                slidesPerView: 2,
+              },
+              980: {
+                slidesPerView: 3,
+              },
+              1278: {
+                slidesPerView: 4,
+              },
+            }
         });
+        return mySwiper;
     }
 }
