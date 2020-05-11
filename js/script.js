@@ -13,3 +13,18 @@ window.addEventListener("DOMContentLoaded", function () {
     Slider.init();
     Footer.init();
 });
+
+
+if (matchMedia) {
+    let screen = window.matchMedia('(max-width:1200px)');
+    screen.addListener(changes);
+    changes(screen);
+}
+function changes(screen) {
+    const keyboard = document.querySelector('.key-div');
+    if (screen.matches) {
+        keyboard.classList.add('none');
+    } else {
+        keyboard.classList.remove('none');
+    }
+}
