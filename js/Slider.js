@@ -7,16 +7,35 @@ export default {
 
     movies: [],
     value: '',
-    page: 1,
-    results: 0,
 
-    init() {       
+    async init() {       
+
         this.value = Search.value; 
         this.movies = [];
 
-        this.getMovie(this.page)
-        .then(data => {
-            this.wrapper = create('div', 'swiper-wrapper', this.createMovieCard(data));              
+        this.getMovieCard();
+                   
+    },
+    
+    async getMovie(page) {
+        let response = await fetch(`https://www.omdbapi.com/?s=${this.value}&page=${page}&apikey=80661894`);
+        let data = await response.json();
+        return data;
+    },
+
+    getMovieCard() {
+        this.getMovie(1).then(data => {
+            if (parseInt(data.totalResults) <= 20) this.createMovieCard(data, parseInt(data.totalResults));
+            else {
+                this.createMovieCard(data);
+                const count = Math.floor(parseInt(data.totalResults) / 10) - 1;
+                for (let i = 0; i < count; i++) {
+                    this.getMovie(i+2).then(res => {
+                        this.wrapper.appendChild(this.createMovieCard(res));        
+                    }); 
+                }      
+            }
+            this.wrapper = create('div', 'swiper-wrapper', this.movies);              
             this.prev = create('div', 'swiper-button-prev');                 
             this.next = create('div', 'swiper-button-next');
             this.container = create('div', 'swiper-container', this.wrapper);
@@ -25,38 +44,22 @@ export default {
             document.body.appendChild(this.swiper);
             Footer.init();
             this.initSwiper();
-        })
-        
-    },
-    
-    async getMovie(page) {
-        let response = await fetch(`https://www.omdbapi.com/?s=${this.value}&page=${page}&apikey=80661894`);
-        let data = await response.json();
-        page++;
-        return data;
+        });
     },
 
-    createMovieCard(data) {    
-        this.results = parseInt(data.totalResults);
-        
-        let count = 10;
-        if (this.results < 50) count = this.results;
-                
-        while (count > 0) {
-            let n = 10;                                                                           
-            if (count < 10) n = count;
-            for (let i = 0; i < n; i++) {
-                this.movieTitle = create('div', 'movie-title', create('h2', '', `${data.Search[i].Title}`));
-                this.moviePoster = create('div', 'movie-poster', create('img', '', '', null, ['src', `${data.Search[i].Poster}`], ['alt', `The movie titled: ${data.Search[i].Title}`]));
-                this.movieYear = create('p', 'movie-year', `${data.Search[i].Year}`);
-                this.movieElement = create('div', `swiper-slide`, [this.movieTitle, this.moviePoster, this.movieYear]);
-                
-                this.movies.push(this.movieElement);
-            }
-                
-            count -= n;            
-        }
-        return this.movies;                     
+    createMovieCard(data, n = 10) {                          
+        const fragment = document.createDocumentFragment();                                                       
+        for (let i = 0; i < n; i++) {
+            this.movieTitle = create('div', 'movie-title', create('h2', '', `${data.Search[i].Title}`));
+            const poster = data.Search[i].Poster === "N/A" ? '../assets/alt.jpg' : data.Search[i].Poster;
+            this.moviePoster = create('div', 'movie-poster', create('img', '', '', null, ['src', `${poster}`], ['alt', `The movie titled: ${data.Search[i].Title}`]));
+            this.movieYear = create('p', 'movie-year', `${data.Search[i].Year}`);
+            this.movieElement = create('div', `swiper-slide`, [this.movieTitle, this.moviePoster, this.movieYear]);
+            this.movies.push(this.movieElement);
+
+            fragment.appendChild(this.movieElement);
+        }     
+        return fragment;              
     },
 
     initSwiper() {
