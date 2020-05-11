@@ -1,3 +1,5 @@
+import Search from './Search.js';
+
 export default {
     elements: {
         main: null,
@@ -73,12 +75,13 @@ export default {
                     break;
 
                 case "enter":
-                    keyElement.classList.add("keyboard_key-wide");
+                    keyElement.classList.add("keyboard_key-wide", "keyboard-enter");
                     keyElement.innerHTML = createIconHTML("keyboard_return");
 
-                    keyElement.addEventListener("click", () => {
-                        this._addKey("\n");
-                        this._triggerEvent("oninput");
+                    keyElement.addEventListener("click", () => {    
+                        Search.searchMovie();                   
+                        this.close();
+                        this._triggerEvent("onclose");
                     });
                     break;
 

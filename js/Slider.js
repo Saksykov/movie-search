@@ -1,49 +1,50 @@
 import create from './create.js';
 import Search from './Search.js';
-import Footer from './Footer.js';
 
 
 export default {
 
     movies: [],
-    value: '',
+	value: '',
+	mySwiper: null,
 
-    async init() {       
+    init() {       
 
-        this.value = Search.value; 
-        this.movies = [];
+        this.wrapper = create('div', 'swiper-wrapper');              
+        this.prev = create('div', 'swiper-button-prev');                 
+        this.next = create('div', 'swiper-button-next');
+        this.container = create('div', 'swiper-container', this.wrapper);
+        this.swiper = create('section', 'swiper', [this.prev, this.container, this.next])
+        document.body.appendChild(this.swiper);
 
-        this.getMovieCard();
-                   
+        this.getMovieCard();             
     },
     
     async getMovie(page) {
-        let response = await fetch(`https://www.omdbapi.com/?s=${this.value}&page=${page}&apikey=80661894`);
+        let response = await fetch(`https://www.omdbapi.com/?s=${this.value}&page=${page}&apikey=9b67fc54`);
         let data = await response.json();
         return data;
     },
 
     getMovieCard() {
+		this.getValue(); console.log('slider - '+this.value)
+		
         this.getMovie(1).then(data => {
-            if (parseInt(data.totalResults) <= 20) this.createMovieCard(data, parseInt(data.totalResults));
+            if (parseInt(data.totalResults) <= 20) {
+				this.wrapper.appendChild(this.createMovieCard(data, parseInt(data.totalResults)));
+				this.initSwiper();
+			}
             else {
-                this.createMovieCard(data);
+				this.wrapper.appendChild(this.createMovieCard(data));
+
                 const count = Math.floor(parseInt(data.totalResults) / 10) - 1;
                 for (let i = 0; i < count; i++) {
                     this.getMovie(i+2).then(res => {
-                        this.wrapper.appendChild(this.createMovieCard(res));        
-                    }); 
-                }      
+						this.wrapper.appendChild(this.createMovieCard(res));
+						if (i == count - 1) this.initSwiper();   						     
+					});				 
+				}	     
             }
-            this.wrapper = create('div', 'swiper-wrapper', this.movies);              
-            this.prev = create('div', 'swiper-button-prev');                 
-            this.next = create('div', 'swiper-button-next');
-            this.container = create('div', 'swiper-container', this.wrapper);
-            this.swiper = create('section', 'swiper', [this.prev, this.container, this.next]);
-
-            document.body.appendChild(this.swiper);
-            Footer.init();
-            this.initSwiper();
         });
     },
 
@@ -63,10 +64,12 @@ export default {
     },
 
     initSwiper() {
-        const mySwiper =  new Swiper('.swiper-container', {
+        this.mySwiper =  new Swiper('.swiper-container', {
+			observer: true,
             slidesPerView: 4,
             spaceBetween: 60,
-            direction: 'horizontal',
+			direction: 'horizontal',
+			grabCursor: true,
             navigation: {
               nextEl: '.swiper-button-next',
               prevEl: '.swiper-button-prev',
@@ -75,7 +78,7 @@ export default {
               319: {
                 slidesPerView: 1,
               },
-              640: {
+              450: {
                 slidesPerView: 2,
               },
               980: {
@@ -86,6 +89,16 @@ export default {
               },
             }
         });
-        return mySwiper;
-    }
+	},
+
+	destroySwiper() {
+		if (this.mySwiper) {
+			this.mySwiper.destroy();
+			this.mySwiper = null;
+		}	
+	},
+	
+	getValue() {
+		this.value = Search.value;
+	}
 }

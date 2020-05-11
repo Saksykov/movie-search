@@ -1,5 +1,6 @@
 import create from './create.js';
 import virtualKeyboard from './Keyboard.js';
+import Slider from './Slider.js';
 
 export default {
 
@@ -15,6 +16,10 @@ export default {
 
         document.body.appendChild(this.search);
         this.putBtn();
+
+        document.addEventListener('keydown', (event) => {
+            if (event.code == 'Enter') this.searchMovie();
+          });
     },
 
     putBtn() {
@@ -33,11 +38,17 @@ export default {
             this.field.focus();
         });
         
-        this.btn.addEventListener('click', () => {
-            this._getValue();
+        this.btn.addEventListener('click', () => {            
             if (this.value.length < 3) alert('Enter your request!');
-            else this.findRequest();
+            else this.searchMovie();
         });       
+    },
+
+    searchMovie() {
+        this._getValue();       console.log(this.value);
+        document.querySelectorAll('.swiper-slide').forEach(elem => elem.remove());
+        Slider.destroySwiper();
+        Slider.getMovieCard();
     },
 
     _getValue() {
