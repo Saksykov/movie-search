@@ -21,13 +21,13 @@ export default {
     },
     
     async getMovie(page) {
-        let response = await fetch(`https://www.omdbapi.com/?s=${this.value}&page=${page}&apikey=9b67fc54`);
+        let response = await fetch(`https://www.omdbapi.com/?s=${this.value}&page=${page}&apikey=8d17e8a4`);
         let data = await response.json();
         return data;
     },
 
     getMovieCard() {
-		this.getValue(); console.log('slider - '+this.value)
+		this.getValue();
 		
         this.getMovie(1).then(data => {
             if (parseInt(data.totalResults) <= 20) {
@@ -36,8 +36,8 @@ export default {
 			}
             else {
 				this.wrapper.appendChild(this.createMovieCard(data));
-
-                const count = Math.floor(parseInt(data.totalResults) / 10) - 1;
+				console.log('искусевенно ограничил количество запросов, что бы не каждый раз не менять апи-кей');
+                const count = 2; //Math.floor(parseInt(data.totalResults) / 10) - 1;
                 for (let i = 0; i < count; i++) {
                     this.getMovie(i+2).then(res => {
 						this.wrapper.appendChild(this.createMovieCard(res));

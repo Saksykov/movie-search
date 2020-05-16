@@ -21,10 +21,12 @@ if (matchMedia) {
     changes(screen);
 }
 function changes(screen) {
-    const keyboard = document.querySelector('.key-div');
+    const keyDiv = document.querySelector('.key-div');
+    const keyboard = document.querySelector('.keyboard');
     if (screen.matches) {
-        keyboard.classList.add('none');
+        keyDiv.classList.add('none');
+        if (!keyboard.classList.contains('keyboard-hidden')) Keyboard.close();
     } else {
-        keyboard.classList.remove('none');
+        keyDiv.classList.remove('none');
     }
 }

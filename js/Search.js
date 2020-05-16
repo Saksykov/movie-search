@@ -45,7 +45,7 @@ export default {
     },
 
     searchMovie() {
-        this._getValue();       console.log(this.value);
+        this._getValue();       
         document.querySelectorAll('.swiper-slide').forEach(elem => elem.remove());
         Slider.destroySwiper();
         Slider.getMovieCard();
