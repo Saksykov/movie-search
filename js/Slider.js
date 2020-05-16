@@ -36,7 +36,7 @@ export default {
 			}
             else {
 				this.wrapper.appendChild(this.createMovieCard(data));
-				console.log('искусевенно ограничил количество запросов, что бы не каждый раз не менять апи-кей');
+				console.log('искусевенно ограничил количество запросов, что бы каждый раз не менять апи-кей');
                 const count = 2; //Math.floor(parseInt(data.totalResults) / 10) - 1;
                 for (let i = 0; i < count; i++) {
                     this.getMovie(i+2).then(res => {
