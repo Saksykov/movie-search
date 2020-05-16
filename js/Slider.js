@@ -7,19 +7,18 @@ export default {
     movies: [],
 	value: '',
 	mySwiper: null,
-	apikey: '8d17e8a4',
+	apikey: '191a1c0b',
 
     init() {       
 
         this.wrapper = create('div', 'swiper-wrapper');              
         this.prev = create('div', 'swiper-button-prev');                 
         this.next = create('div', 'swiper-button-next');
-        this.container = create('div', 'swiper-container', this.wrapper);
+		this.container = create('div', 'swiper-container', this.wrapper);
         this.swiper = create('section', 'swiper', [this.prev, this.container, this.next])
         document.body.appendChild(this.swiper);
 		
-		this.getMovieCard();
-                    
+		this.getMovieCard();             
     },
     
     async getMovie(page) {
@@ -36,15 +35,15 @@ export default {
 			const results = parseInt(data.totalResults); console.log(results);
 			if (results !== results) {
 				Search.searchInfo(this.value, false);
-				n = 3;
+				n = 4;
 				this.value = 'star wars';
 			}
-			else if (results <= 10) {
+			else if (results < 10) {
 				n = results;
 				Search.searchInfo(this.value, true);
 			}
 			else {
-				pages = 2; //Math.floor(results / 10);
+				pages = 3; //Math.floor(results / 10);
 				Search.searchInfo(this.value, true);		
 			}
 		});		
