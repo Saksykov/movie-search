@@ -195,11 +195,19 @@
     height: 70px;
     font-size: 16px;
 }
+.movie-title a {
+    text-decoration: none;
+}
 .movie-title h2{
     font-size: 20px;
 }
 .movie-poster img {
     width: 100%;
+}
+.movie-info {
+    margin-top: 10px;
+    display: flex;
+    justify-content: space-around;
 }
 
 

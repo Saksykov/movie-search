@@ -7,6 +7,7 @@ export default {
     movies: [],
 	value: '',
 	mySwiper: null,
+	apikey: '8d17e8a4',
 
     init() {       
 
@@ -16,52 +17,59 @@ export default {
         this.container = create('div', 'swiper-container', this.wrapper);
         this.swiper = create('section', 'swiper', [this.prev, this.container, this.next])
         document.body.appendChild(this.swiper);
-
-        this.getMovieCard();             
+		
+		this.getMovieCard();
+                    
     },
     
     async getMovie(page) {
-        let response = await fetch(`https://www.omdbapi.com/?s=${this.value}&page=${page}&apikey=8d17e8a4`);
+        let response = await fetch(`https://www.omdbapi.com/?s=${this.value}&page=${page}&apikey=${this.apikey}`);
         let data = await response.json();
         return data;
     },
 
-    getMovieCard() {
+    async getMovieCard() {
 		this.getValue();
-		
-        this.getMovie(1).then(data => {
-            if (parseInt(data.totalResults) <= 20) {
-				this.wrapper.appendChild(this.createMovieCard(data, parseInt(data.totalResults)));
-				this.initSwiper();
-			}
-            else {
-				this.wrapper.appendChild(this.createMovieCard(data));
-				console.log('искусевенно ограничил количество запросов, что бы каждый раз не менять апи-кей');
-                const count = 2; //Math.floor(parseInt(data.totalResults) / 10) - 1;
-                for (let i = 0; i < count; i++) {
-                    this.getMovie(i+2).then(res => {
-						this.wrapper.appendChild(this.createMovieCard(res));
-						if (i == count - 1) this.initSwiper();   						     
-					});				 
-				}	     
-            }
-        });
+		let pages = 1;console.log('искусcтевенно ограничил количество запросов, что бы каждый раз не менять апи-кей');
+		let n = 10;
+        await this.getMovie(1).then(data => {
+			const results = parseInt(data.totalResults);
+			if (results <= 10) n = results;
+			else pages = 2; //Math.floor(results / 10);		
+		});		
+		await this.createMovieCard(pages, n);
+		this.initSwiper(); 
     },
 
-    createMovieCard(data, n = 10) {                          
-        const fragment = document.createDocumentFragment();                                                       
-        for (let i = 0; i < n; i++) {
-            this.movieTitle = create('div', 'movie-title', create('h2', '', `${data.Search[i].Title}`));
-            const poster = data.Search[i].Poster === "N/A" ? '../assets/alt.jpg' : data.Search[i].Poster;
-            this.moviePoster = create('div', 'movie-poster', create('img', '', '', null, ['src', `${poster}`], ['alt', `The movie titled: ${data.Search[i].Title}`]));
-            this.movieYear = create('p', 'movie-year', `${data.Search[i].Year}`);
-            this.movieElement = create('div', `swiper-slide`, [this.movieTitle, this.moviePoster, this.movieYear]);
-            this.movies.push(this.movieElement);
-
-            fragment.appendChild(this.movieElement);
-        }     
-        return fragment;              
-    },
+    async createMovieCard(pages, n) {                          
+		for (let j = 1; j <= pages; j++) {
+			await this.getMovie(j)
+			.then(data => {
+				for (let i = 0; i < n; i++) { 
+					let fragment = document.createDocumentFragment();
+					this.getRating(data.Search[i].imdbID)
+					.then(res => {                                                      
+        			    this.movieTitle = create('div', 'movie-title', create('a', '', create('h2', '', `${data.Search[i].Title}`), null, ['href', `https://www.imdb.com/title/${data.Search[i].imdbID}`], ['target', '_blank']));
+        			    const poster = data.Search[i].Poster === "N/A" ? '../assets/alt.jpg' : data.Search[i].Poster;
+        			    this.moviePoster = create('div', 'movie-poster', create('img', '', '', null, ['src', `${poster}`], ['alt', `The movie titled: ${data.Search[i].Title}`]));
+						this.movieYear = create('p', 'movie-year', `${data.Search[i].Year}`);
+						this.rating = create('p', 'movie-rating', `IMDB : ${res.Ratings[0].Value}`);
+						this.movieInfo = create('div', 'movie-info', [this.movieYear, this.rating]);
+        			    this.movieElement = create('div', `swiper-slide`, [this.movieTitle, this.moviePoster, this.movieInfo]);
+						fragment.appendChild(this.movieElement);
+						this.wrapper.appendChild(fragment);
+					}); 		
+				}  
+			})       
+		} 
+	},
+	
+	async getRating(id) {
+		const url = `https://www.omdbapi.com/?i=${id}&apikey=${this.apikey}`;
+		let res = await fetch(url);
+		let data = await res.json();
+		return data;
+	},
 
     initSwiper() {
         this.mySwiper =  new Swiper('.swiper-container', {
