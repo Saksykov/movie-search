@@ -37,14 +37,14 @@
 
 /* SEARCH */
 .search {
-	margin-top: 95px;
+    margin-top: 95px;
+    background-color: #c7c9cf;
 }
 .search-container {
     margin: 0 auto;
     display: flex;
 	justify-content: center;
 	height: 105px;
-	background-color: #c7c9cf;
 	align-items: center;
     padding: 0 23px 0 40px;
 }
@@ -100,6 +100,13 @@
     top: .1em;
     left: .1em;
     box-shadow: 0 0 0 60px rgba(0,0,0,.05) inset;
+}
+.search-info {
+    height: 24px;
+    text-align: center;
+    color: red;
+    font-style: italic;
+    font-weight: bold;
 }
 
 /* KEYBOARD */

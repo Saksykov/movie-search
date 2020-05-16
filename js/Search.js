@@ -12,7 +12,8 @@ export default {
         this.keyboard = create('img', 'keyboard-img', '', null, ['src', '../assets/keyboard.png']);
         this.btn = create('input', 'btn', '', null, ['id', 'btn'], ['type', 'submit'], ['value', 'Search']);
         this.container = create('div', 'search-container', [this.field, this.delete, create('div', 'key-div', this.keyboard), this.btn]);
-        this.search = create('section', 'search', this.container);
+        this.info = create('div', 'search-info');
+        this.search = create('section', 'search', [this.container, this.info]);
 
         document.body.appendChild(this.search);
         this.putBtn();
@@ -39,13 +40,12 @@ export default {
         });
         
         this.btn.addEventListener('click', () => {            
-            if (this.value.length < 3) alert('Enter your request!');
-            else this.searchMovie();
+            this.searchMovie();
         });       
     },
 
     searchMovie() {
-        this._getValue();       
+        this._getValue();      
         document.querySelectorAll('.swiper-slide').forEach(elem => elem.remove());
         Slider.destroySwiper();
         Slider.getMovieCard();
@@ -58,5 +58,10 @@ export default {
     _deleteValue() {
         this.value = '';
         this.field.value = '';
+    },
+
+    searchInfo(value, bool) {console.log(value, bool);
+        if (bool) document.querySelector('.search-info').innerHTML = `Showing results for ${value}`;
+        else document.querySelector('.search-info').innerHTML = `No results were found for ${value}`;
     }
 }

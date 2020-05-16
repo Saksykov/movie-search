@@ -33,9 +33,20 @@ export default {
 		let pages = 1;console.log('искусcтевенно ограничил количество запросов, что бы каждый раз не менять апи-кей');
 		let n = 10;
         await this.getMovie(1).then(data => {
-			const results = parseInt(data.totalResults);
-			if (results <= 10) n = results;
-			else pages = 2; //Math.floor(results / 10);		
+			const results = parseInt(data.totalResults); console.log(results);
+			if (results !== results) {
+				Search.searchInfo(this.value, false);
+				n = 3;
+				this.value = 'star wars';
+			}
+			else if (results <= 10) {
+				n = results;
+				Search.searchInfo(this.value, true);
+			}
+			else {
+				pages = 2; //Math.floor(results / 10);
+				Search.searchInfo(this.value, true);		
+			}
 		});		
 		await this.createMovieCard(pages, n);
 		this.initSwiper(); 
